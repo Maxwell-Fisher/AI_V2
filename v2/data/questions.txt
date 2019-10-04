@@ -1,0 +1,10 @@
+ 
+Fri 10/04/2019 12:07:46.02 voice-type=unknown multiple=no math=no variable=no type=unknown request=unknown     "i am sad" 
+ 
+Fri 10/04/2019 12:09:09.30 voice-type=unknown multiple=no math=no variable=no type=unknown request=unknown     "pentagrams" 
+ 
+Fri 10/04/2019 13:22:17.07 voice-type=unknown multiple=no math=no variable=no type=unknown request=unknown     "helo" 
+ 
+Fri 10/04/2019 13:22:37.85 voice-type=unknown multiple=no math=no variable=no type=unknown request=unknown     "suck my dick" 
+ 
+Fri 10/04/2019 13:23:21.41 voice-type=question multiple=no math=no variable=no type=unknown request=defenition     "whats my name" 
