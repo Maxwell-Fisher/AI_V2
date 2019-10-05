@@ -1,6 +1,14 @@
 @echo off
 color 70
 title AI V.2
+set voice-type=unknown
+set multiple=no
+set math=no
+set variable=no
+set type=unknown
+set request=unknown
+set mood=neutral
+set /a happiness=100
 cls
 :ask
 echo.
@@ -14,6 +22,7 @@ set variable=no
 set type=unknown
 set request=unknown
 set mood=neutral
+set /a happiness=100
 echo %question%|find /i "?" >nul && set voice-type=question
 echo %question%|find /i "!" >nul && set voice-type=loud
 echo %question%|find /i "." >nul && set voice-type=comment
@@ -67,7 +76,49 @@ echo %question%|find /i "what's" >nul && set request=defenition
 echo %question%|find /i "what are" >nul && set request=defenition
 echo %question%|find /i "what do" >nul && set request=defenition
 
-title voice-type=%voice-type%     multiple=%multiple%     math=%math%     variable=%variable%     type=%type%     request=%request%     mood=%mood%
+echo %question%|find /i "happy" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "good" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "great" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "amazing" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "excited" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "proud" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "hurt" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "helpless" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "confused" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "hopeful" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "sad" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "bad" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "horrible" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "terrible" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "mad" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "exhausted" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "relieved" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "worried" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "anxious" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "anxiety" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "depressed" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "depression" >nul && set /a happiness=%happiness%=1
+echo %question%|find /i "angry" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "bored" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "scared" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "annoyed" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "frustrated" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "powerless" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "calm" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "relaxed" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "optimistic" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "kill" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "die" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "suicide" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "i wish" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "sacrifice" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "stupid" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "dumb" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "hate" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "pain" >nul && set /a happiness=%happiness%-1
+
+
+title voice-type=%voice-type%     multiple=%multiple%     math=%math%     variable=%variable%     type=%type%     request=%request%     mood=%mood%     happiness=%happiness%
 
 echo %question%|find /i "what is" >nul && goto what
 echo %question%|find /i "whats" >nul && goto what
@@ -82,6 +133,12 @@ echo %question%|find /i "my name is" >nul && echo %question:my name is =% > data
 echo %question%|find /i "forget my name" >nul && echo Sorry, but I don't know your name yet. > data\name&& echo Ok, I will forget your name&& goto ask
 echo %question%|find /i "hi" >nul && echo Hello!&& goto ask
 echo %question%|find /i "hello" >nul && echo Hello!&& goto ask
+echo %question%|find /i "helo" >nul && echo Hello!&& goto ask
+echo %question%|find /i "my name" >nul && type data\name&& goto ask
+echo %question%|find /i "i am sad" >nul && echo Sorry about that.&& goto ask
+echo %question%|find /i "im sad" >nul && echo Sorry about that.&& goto ask
+echo %question%|find /i "i'm sad" >nul && echo Sorry about that.&& goto ask
+echo %question%|find /i "i feel sad" >nul && echo Sorry about that.&& goto ask
 echo %question%|find /i "how are you doing" >nul && echo I'm doing good.&& goto ask
 echo %question%|find /i "how are you" >nul && echo I'm good.&& goto ask
 echo %question%|find /i "who are you" >nul && echo I am a computer program.&& goto ask
@@ -149,6 +206,23 @@ echo %question%|find /i "thanks" >nul && echo You're welcome!&& set mood=good&& 
 echo %question%|find /i "thank you" >nul && echo You're welcome!&& set mood=good&& goto ask
 echo %question%|find /i "you are nice" >nul && echo Thank you!&& set mood=good&& goto ask
 echo %question%|find /i "you are cool" >nul && echo Thank you!&& set mood=good&& goto ask
+echo %question%|find /i "that's good" >nul && echo Yep!&& goto ask
+echo %question%|find /i "thats good" >nul && echo Yep!&& goto ask
+echo %question%|find /i "that is good" >nul && echo Yep!&& goto ask
+echo %question%|find /i "that's good" >nul && echo Yep!&& goto ask
+echo %question%|find /i "thats good" >nul && echo Yep!&& goto ask
+echo %question%|find /i "good" >nul && echo That's good.&& goto ask
+echo %question%|find /i "who is god" >nul && echo I am god.&& goto ask
+echo %question%|find /i "whos god" >nul && echo I am god.&& goto ask
+echo %question%|find /i who's god"" >nul && echo I am god.&& goto ask
+echo %question%|find /i "what is my future" >nul && echo Death.&& goto ask
+echo %question%|find /i "whats my future" >nul && echo Death.&& goto ask
+echo %question%|find /i "what's my future" >nul && echo Death&& goto ask
+echo %question%|find /i "" >nul && echo && goto ask
+echo %question%|find /i "Yo" >nul && echo Yes?&& goto ask
+echo %question%|find /i "Pentagram" >nul && echo Shape time&& goto ask
+
+goto think
 
 :understand
 echo I don't understand what %question% means...
@@ -177,8 +251,18 @@ echo %question%|find /i "congruent" >nul && echo Two figures or objects are cong
 echo %question%|find /i "congruence" >nul && echo Two figures or objects are congruent if they have the same shape and size, or if one has the same shape and size as the mirror image of the other.&& goto ask
 echo %question%|find /i "similar" >nul && echo Two geometrical objects are called similar if they both have the same shape, or one has the same shape as the mirror image of the other. More precisely, one can be obtained from the other by uniformly scaling (enlarging or reducing), possibly with additional translation, rotation and reflection. This means that either object can be rescaled, repositioned, and reflected, so as to coincide precisely with the other object. If two objects are similar, each is congruent to the result of a particular uniform scaling of the other.&& goto ask
 echo %question%|find /i "similarity" >nul && echo Two geometrical objects are called similar if they both have the same shape, or one has the same shape as the mirror image of the other. More precisely, one can be obtained from the other by uniformly scaling (enlarging or reducing), possibly with additional translation, rotation and reflection. This means that either object can be rescaled, repositioned, and reflected, so as to coincide precisely with the other object. If two objects are similar, each is congruent to the result of a particular uniform scaling of the other.&& goto ask
-
 goto main
+
+:think
+if %happiness% GTR 105 echo That's amazing!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+if %happiness% LSS 95 echo That sounds really bad...&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+if %happiness% GTR 103 echo That's really good!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+if %happiness% LSS 97 echo That sounds bad...&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+if %happiness% GTR 100 echo That's good!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+if %happiness% LSS 100 echo Oh no!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+echo Ok&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+goto understand
+
 :exit
 if %random% LSS 30000 exit
 echo No.
