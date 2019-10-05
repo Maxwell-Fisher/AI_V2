@@ -214,13 +214,15 @@ echo %question%|find /i "thats good" >nul && echo Yep!&& goto ask
 echo %question%|find /i "good" >nul && echo That's good.&& goto ask
 echo %question%|find /i "who is god" >nul && echo I am god.&& goto ask
 echo %question%|find /i "whos god" >nul && echo I am god.&& goto ask
-echo %question%|find /i who's god"" >nul && echo I am god.&& goto ask
+echo %question%|find /i "who's god" >nul && echo I am god.&& goto ask
 echo %question%|find /i "what is my future" >nul && echo Death.&& goto ask
 echo %question%|find /i "whats my future" >nul && echo Death.&& goto ask
 echo %question%|find /i "what's my future" >nul && echo Death&& goto ask
-echo %question%|find /i "" >nul && echo && goto ask
-echo %question%|find /i "Yo" >nul && echo Yes?&& goto ask
 echo %question%|find /i "Pentagram" >nul && echo Shape time&& goto ask
+echo %question%|find /i "I'm confused" >nul && echo Hi confused, i'm dad!&& goto ask
+echo %question%|find /i "Im confused" >nul && echo Hi confused, i'm dad!&& goto ask
+echo %question%|find /i "I am confused" >nul && echo Hi confused, i'm dad!&& goto ask
+echo %question%|find /i "I feel confused" >nul && echo Same.&& goto ask
 
 goto think
 
