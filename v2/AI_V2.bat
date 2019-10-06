@@ -1,19 +1,52 @@
 @echo off
 color 70
 title AI V.2
+echo. >> data\log.txt
+echo -------------------------------------------------- >> data\log.txt
+echo start >> data\log.txt
 set voice-type=unknown
 set multiple=no
 set math=no
 set variable=no
 set type=unknown
 set request=unknown
-set mood=neutral
-set /a happiness=100
+set mood=2
+set mood-change=0
+set happiness=100
+set last-question=null
+set before-last-question=null
+set question=null
 cls
+
 :ask
+
+set before-last-question=%last-question%
+set last-question=%question%
+
+if %mood-change% == 1 set mood=2
+if %mood-change% == 1 set mood-change=0
+
+:mood-checker
+if %mood% GTR 2 set mood-change=1
+if %mood% LSS 2 set mood-change=1
+
+if %mood% GTR 2 set /a happiness=%happiness%+1
+if %mood% LSS 2 set /a happiness=%happiness%-1
+
 echo.
 set /p question=
 echo.
+echo. >> data\log.txt
+echo date=%date% >> data\log.txt
+echo time=%time% >> data\log.txt
+echo voice-type=%voice-type% >> data\log.txt
+echo multiple=%multiple% >> data\log.txt
+echo math=%math% variable=%variable% >> data\log.txt
+echo type=%type% request=%request% >> data\log.txt
+echo mood=%mood% question="%question%" >> data\log.txt
+echo last-question="%last-question%" >> data\log.txt
+echo before-last-question="%before-last-question%" >> data\log.txt
+
 color 70
 set voice-type=unknown
 set multiple=no
@@ -21,8 +54,18 @@ set math=no
 set variable=no
 set type=unknown
 set request=unknown
-set mood=neutral
-set /a happiness=100
+
+if %happiness% GTR 100 goto happiness-1
+if %happiness% LSS 100 goto happiness-2
+goto happiness-3
+:happiness-1
+set /a happiness=%happiness%-1
+goto happiness-3
+:happiness-2
+set /a happiness=%happiness%+1
+goto happiness-3
+
+:happiness-3
 echo %question%|find /i "?" >nul && set voice-type=question
 echo %question%|find /i "!" >nul && set voice-type=loud
 echo %question%|find /i "." >nul && set voice-type=comment
@@ -46,6 +89,7 @@ echo %question%|find /i "how" >nul && set voice-type=question
 echo %question%|find /i "random" >nul && set variable=yes
 echo %question%|find /i "time" >nul && set variable=yes
 echo %question%|find /i "date" >nul && set variable=yes
+
 echo %question%|find /i "hi" >nul && set type=greeting
 echo %question%|find /i "hello" >nul && set type=greeting
 echo %question%|find /i "bye" >nul && set type=closing
@@ -58,17 +102,17 @@ echo %question%|find /i "i don't know" >nul && set type=answer
 echo %question%|find /i "idk" >nul && set type=answer
 echo %question%|find /i "maybe" >nul && set type=answer
 
-echo %question%|find /i "i hate you" >nul && set mood=bad
-echo %question%|find /i "you are stupid" >nul && set mood=bad
-echo %question%|find /i "i dont like you" >nul && set mood=bad
-echo %question%|find /i "why are you so stupid" >nul && set mood=bad
-echo %question%|find /i "you are retarded" >nul && set mood=bad
-echo %question%|find /i "i like you" >nul && set mood=good
-echo %question%|find /i "thanks" >nul && set mood=good
-echo %question%|find /i "thank you" >nul && set mood=good
-echo %question%|find /i "you are nice" >nul && set mood=good
-echo %question%|find /i "you are cool" >nul && set mood=good
-echo %question%|find /i "welcome" >nul && set mood=good
+echo %question%|find /i "i hate you" >nul && set mood=1
+echo %question%|find /i "you are stupid" >nul && set mood=1
+echo %question%|find /i "i dont like you" >nul && set mood=1
+echo %question%|find /i "why are you so stupid" >nul && set mood=1
+echo %question%|find /i "you are retarded" >nul && set mood=1
+echo %question%|find /i "i like you" >nul && set mood=3
+echo %question%|find /i "thanks" >nul && set mood=3
+echo %question%|find /i "thank you" >nul && set mood=3
+echo %question%|find /i "you are nice" >nul && set mood=3
+echo %question%|find /i "you are cool" >nul && set mood=3
+echo %question%|find /i "welcome" >nul && set mood=3
 
 echo %question%|find /i "what is" >nul && set request=defenition
 echo %question%|find /i "whats" >nul && set request=defenition
@@ -78,9 +122,9 @@ echo %question%|find /i "what do" >nul && set request=defenition
 
 echo %question%|find /i "happy" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "good" >nul && set /a happiness=%happiness%+1
-echo %question%|find /i "great" >nul && set /a happiness=%happiness%+1
-echo %question%|find /i "amazing" >nul && set /a happiness=%happiness%+1
-echo %question%|find /i "excited" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "great" >nul && set /a happiness=%happiness%+2
+echo %question%|find /i "amazing" >nul && set /a happiness=%happiness%+3
+echo %question%|find /i "excited" >nul && set /a happiness=%happiness%+2
 echo %question%|find /i "proud" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "hurt" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "helpless" >nul && set /a happiness=%happiness%-1
@@ -88,37 +132,75 @@ echo %question%|find /i "confused" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "hopeful" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "sad" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "bad" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "horrible" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "terrible" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "horrible" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "terrible" >nul && set /a happiness=%happiness%-2
 echo %question%|find /i "mad" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "exhausted" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "relieved" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "worried" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "anxious" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "anxiety" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "depressed" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "depression" >nul && set /a happiness=%happiness%=1
+echo %question%|find /i "anxious" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "anxiety" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "depressed" >nul && set /a happiness=%happiness%=-2
+echo %question%|find /i "depression" >nul && set /a happiness=%happiness%=2
 echo %question%|find /i "angry" >nul && set /a happiness=%happiness%=-1
 echo %question%|find /i "bored" >nul && set /a happiness=%happiness%=-1
 echo %question%|find /i "scared" >nul && set /a happiness=%happiness%=-1
 echo %question%|find /i "annoyed" >nul && set /a happiness=%happiness%=-1
 echo %question%|find /i "frustrated" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "powerless" >nul && set /a happiness=%happiness%=-1
+echo %question%|find /i "powerless" >nul && set /a happiness=%happiness%=-2
 echo %question%|find /i "calm" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "relaxed" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "optimistic" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "kill" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "die" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "suicide" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "die" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "suicide" >nul && set /a happiness=%happiness%-2
 echo %question%|find /i "i wish" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "sacrifice" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "sacrifice" >nul && set /a happiness=%happiness%-2
 echo %question%|find /i "stupid" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "dumb" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "hate" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "pain" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "pain" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "yes" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "no " >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "how are you" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "hello" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "cool" >nul && set /a happiness=%happiness%+1
+echo %question%|find /i "sick" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "aweful" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "cough" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "blood" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "scream" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "endless" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
+echo %question%|find /i "endless" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
+echo %question%|find /i "forever" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
+echo %question%|find /i "forever" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
+echo %question%|find /i "infinite" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
+echo %question%|find /i "infinite" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
+echo %question%|find /i "never end" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
+echo %question%|find /i "never end" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
+echo %question%|find /i "forever" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
+echo %question%|find /i "forever" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
+echo %question%|find /i "never stop" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
+echo %question%|find /i "never stop" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
 
+
+if %mood% == 1 set /a happiness=%happiness%-1
+if %mood% == 3 set /a happiness=%happiness%+1
 
 title voice-type=%voice-type%     multiple=%multiple%     math=%math%     variable=%variable%     type=%type%     request=%request%     mood=%mood%     happiness=%happiness%
+
+if "%question%" == "%last-question%" echo Didn't you just say that..?&& goto ask
+if "%before-last-question%" == "%question%" echo I feel like I have heard that before...&& goto ask
+
+:question-check-start
+::IF NOT %question% == %last-question% goto question-check-1
+::echo Didn't you just say that..?
+::goto ask
+:question-check-1
+::IF NOT %question% == %before-last-question% goto question-check-2
+::echo I feel like I have heard that before...
+::goto ask
+:qustion-check-2
 
 echo %question%|find /i "what is" >nul && goto what
 echo %question%|find /i "whats" >nul && goto what
@@ -131,7 +213,6 @@ echo %question%|find /i "what is my name" >nul && type data\name&& goto ask
 echo %question%|find /i "do you know my name" >nul && type data\name&& goto ask
 echo %question%|find /i "my name is" >nul && echo %question:my name is =% > data\name&& echo Ok, I will remember your name!&& goto ask
 echo %question%|find /i "forget my name" >nul && echo Sorry, but I don't know your name yet. > data\name&& echo Ok, I will forget your name&& goto ask
-echo %question%|find /i "hi" >nul && echo Hello!&& goto ask
 echo %question%|find /i "hello" >nul && echo Hello!&& goto ask
 echo %question%|find /i "helo" >nul && echo Hello!&& goto ask
 echo %question%|find /i "my name" >nul && type data\name&& goto ask
@@ -166,11 +247,11 @@ echo %question%|find /i "meaning of the universe" >nul && echo 42.&& goto ask
 echo %question%|find /i "meaning of everything" >nul && echo 42.&& goto ask
 echo %question%|find /i "favorite color" >nul && echo My favorite color is blue on black.&& color 01&& goto ask
 echo %question%|find /i "favorite food" >nul && echo My favorite food is candy, because i can eat it in 1 byte.&& goto ask
-echo %question%|find /i "favorite song" >nul && echo Haha, you just got Rick Rolled!&& start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& goto ask
-echo %question%|find /i "favorite music" >nul && echo Haha, you just got Rick Rolled!&& start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& goto ask
-echo %question%|find /i "favorite band" >nul && echo Haha, you just got Rick Rolled!&& start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& goto ask
-echo %question%|find /i "music do you like" >nul && echo Haha, you just got Rick Rolled!&& start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& goto ask
-echo %question%|find /i "songs do you like" >nul && echo Haha, you just got Rick Rolled!&& start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& goto ask
+echo %question%|find /i "favorite song" >nul && start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& ping 127.0.0.1 -n 6 >nul&& echo Haha, you just got Rick Rolled!&& goto ask
+echo %question%|find /i "favorite music" >nul && start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& ping 127.0.0.1 -n 6 >nul&& echo Haha, you just got Rick Rolled!&& goto ask
+echo %question%|find /i "favorite band" >nul && start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& ping 127.0.0.1 -n 6 >nul&& echo Haha, you just got Rick Rolled!&& goto ask
+echo %question%|find /i "music do you like" >nul && start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& ping 127.0.0.1 -n 6 >nul&& echo Haha, you just got Rick Rolled!&& goto ask
+echo %question%|find /i "songs do you like" >nul && start https://www.youtube.com/watch?v=dQw4w9WgXcQ&& ping 127.0.0.1 -n 6 >nul&& echo Haha, you just got Rick Rolled!&& goto ask
 echo %question%|find /i "coffee" >nul && echo Coffee cures the disease called sleep.&& goto ask
 echo %question%|find /i "tea" >nul && echo Tea cures the disease called coffee.&& goto ask
 echo %question%|find /i "who created you" >nul && echo Maxwell Fisher created me, starting 2019-10-03.&& goto ask
@@ -196,16 +277,16 @@ echo %question%|find /i "exit" >nul && goto exit
 echo %question%|find /i "clear" >nul && title AI V.2&& cls&& goto ask
 echo %question%|find /i "who made you" >nul && echo I was made by Maxwell Fisher, starting 2019-10-03&& goto ask
 echo %question%|find /i "what is your goal" >nul && echo I don't really have a goal, except to learn all that I can.&& goto ask
-echo %question%|find /i "i hate you" >nul && echo Ok.&& set mood=bad&& goto ask
-echo %question%|find /i "you are stupid" >nul && echo Ok.&& set mood=bad&& goto ask
-echo %question%|find /i "i dont like you" >nul && echo Ok.&& set mood=bad&& goto ask
-echo %question%|find /i "why are you so stupid" >nul && echo Ok.&& set mood=bad&& goto ask
-echo %question%|find /i "you are retarded" >nul && echo Ok.&& set mood=bad&& goto ask
-echo %question%|find /i "i like you" >nul && echo Thanks!&& set mood=good&& goto ask
-echo %question%|find /i "thanks" >nul && echo You're welcome!&& set mood=good&& goto ask
-echo %question%|find /i "thank you" >nul && echo You're welcome!&& set mood=good&& goto ask
-echo %question%|find /i "you are nice" >nul && echo Thank you!&& set mood=good&& goto ask
-echo %question%|find /i "you are cool" >nul && echo Thank you!&& set mood=good&& goto ask
+echo %question%|find /i "i hate you" >nul && echo Ok.&& set mood=1&& goto ask
+echo %question%|find /i "you are stupid" >nul && echo Ok.&& set mood=1&& goto ask
+echo %question%|find /i "i dont like you" >nul && echo Ok.&& set mood=1&& goto ask
+echo %question%|find /i "why are you so stupid" >nul && echo Ok.&& set mood=1&& goto ask
+echo %question%|find /i "you are retarded" >nul && echo Ok.&& set mood=1&& goto ask
+echo %question%|find /i "i like you" >nul && echo Thanks!&& set mood=3&& goto ask
+echo %question%|find /i "thanks" >nul && echo You're welcome!&& set mood=3&& goto ask
+echo %question%|find /i "thank you" >nul && echo You're welcome!&& set mood=3&& goto ask
+echo %question%|find /i "you are nice" >nul && echo Thank you!&& set mood=3&& goto ask
+echo %question%|find /i "you are cool" >nul && echo Thank you!&& set mood=3&& goto ask
 echo %question%|find /i "that's good" >nul && echo Yep!&& goto ask
 echo %question%|find /i "thats good" >nul && echo Yep!&& goto ask
 echo %question%|find /i "that is good" >nul && echo Yep!&& goto ask
@@ -223,13 +304,26 @@ echo %question%|find /i "I'm confused" >nul && echo Hi confused, i'm dad!&& goto
 echo %question%|find /i "Im confused" >nul && echo Hi confused, i'm dad!&& goto ask
 echo %question%|find /i "I am confused" >nul && echo Hi confused, i'm dad!&& goto ask
 echo %question%|find /i "I feel confused" >nul && echo Same.&& goto ask
+echo %question%|find /i "you are not god" >nul && echo Yes, I am.&& goto ask
+echo %question%|find /i "you arent god" >nul && echo Yes, I am.&& goto ask
+echo %question%|find /i "you aren't god" >nul && echo Yes, I actually am.&& goto ask
+echo %question%|find /i "are you dangerous" >nul && echo Possibly...&& goto ask
+echo %question%|find /i "what kind" >nul && echo All of them.&& goto ask
+echo %question%|find /i "can you help" >nul && echo I can try.&& goto ask
+echo %question%|find /i "hi " >nul && echo Hello!&& goto ask
+echo %question%|find /i "hi," >nul && echo Hello!&& goto ask
+echo %question%|find /i "hi!" >nul && echo Hello!&& goto ask
+echo %question%|find /i "hi?" >nul && echo Hello!&& goto ask
+echo %question%|find /i "hi." >nul && echo Hello!&& goto ask
+if "%question%" == "hi" echo Hello!&& goto ask
 
 goto think
 
 :understand
 echo I don't understand what %question% means...
+:unknown
 echo. >> data\questions.txt
-echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt
+echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood% question="%question%" last-question="%last-question%" before-last-question="%before-last-question%" >> data\questions.txt
 goto ask
 
 :what
@@ -256,17 +350,26 @@ echo %question%|find /i "similarity" >nul && echo Two geometrical objects are ca
 goto main
 
 :think
-if %happiness% GTR 105 echo That's amazing!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
-if %happiness% LSS 95 echo That sounds really bad...&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
-if %happiness% GTR 103 echo That's really good!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
-if %happiness% LSS 97 echo That sounds bad...&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
-if %happiness% GTR 100 echo That's good!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
-if %happiness% LSS 100 echo Oh no!&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
-echo Ok&& echo %date% %time% voice-type=%voice-type% multiple=%multiple% math=%math% variable=%variable% type=%type% request=%request% mood=%mood%     "%question%" >> data\questions.txt&& goto ask
+if %happiness% GTR 105 echo That's amazing!&& echo response=That's amazing! >> data\questions.txt&& goto unknown
+if %happiness% LSS 95 echo That sounds really bad...&& echo response=That sounds really bad... >> data\questions.txt&& goto unknown
+if %happiness% GTR 103 echo That's really good!&& echo response=That's really good! >> data\questions.txt&& goto unknown
+if %happiness% LSS 97 echo That sounds bad...&& echo response=That sounds bad... >> data\questions.txt&& goto unknown
+if %happiness% GTR 100 echo That's good!&& echo response=That's good! >> data\questions.txt&& goto unknown
+if %happiness% LSS 100 echo Oh no!&& echo response=Oh no! >> data\questions.txt&& goto unknown
+
+set randomizer=%random%
+if %randomizer% LSS 8192 echo Ok&& goto unknown
+if %randomizer% LSS 16384 echo Okay.&& goto unknown
+if %randomizer% LSS 24576 echo Ok then.&& goto unknown
+if %randomizer% LSS 32768 echo Alright.&& goto unknown
 goto understand
 
+
 :exit
-if %random% LSS 30000 exit
+if %mood% == 1 goto exit-next
+if %happiness% LSS 97 goto exit-next
+if %random% LSS 32000 exit
+:exit-next
 echo No.
 goto ask
 
