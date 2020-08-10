@@ -1,9 +1,38 @@
 @echo off
+if exist "data\people\%computername%\%username%\name" set /p name=<"data\people\%computername%\%username%\name"
+set new=1
+if exist "data\people\%computername%\%username%\lastopened" set /p lastopened=<"data\people\%computername%\%username%\lastopened"
+echo "%date%" > "data\people\%computername%\%username%\lastopened"
+set greeting=Hello %name%!
+::if %date% == %lastopened%&& set welcomeback=Welcome Back!
 color 70
 title AI V.2
+if not exist "data\people\%computername%\%username%" md "data\people\%computername%\%username%"
+if exist "data\people\%computername%\%username%\info" goto name_exists
+echo username=%username% > "data\people\%computername%\%username%\info"
+echo created=%date% %time% >> "data\people\%computername%\%username%\info"
+echo userprofile=%userprofile% >> "data\people\%computername%\%username%\info"
+echo userdomain=%userdomain% >> "data\people\%computername%\%username%\info"
+echo userprofile=%userprofile% >> "data\people\%computername%\%username%\info"
+echo logonserver=%logonserver% >> "data\people\%computername%\%username%\info"
+echo computername=%computername% >> "data\people\%computername%\%username%\info"
+
+:name_exists
 echo. >> data\log.txt
 echo -------------------------------------------------- >> data\log.txt
+echo -------------------------------------------------- >> data\log.txt
+echo -------------------------------------------------- >> data\log.txt
 echo start >> data\log.txt
+echo username=%username% >> data\log.txt
+echo domain=%userdomain% >> data\log.txt
+echo usrsite=%usrsite% >> data\log.txt
+echo userdnsdomain=%userdnsdomain% >> data\log.txt
+echo sessionname=%sessionname% >> data\log.txt
+echo computername=%computername% >> data\log.txt
+echo -------------------------------------------------- >> data\log.txt
+echo.
+ipconfig >> data\log.txt
+echo.
 set voice-type=unknown
 set multiple=no
 set math=no
@@ -33,6 +62,10 @@ if %mood% LSS 2 set mood-change=1
 if %mood% GTR 2 set /a happiness=%happiness%+1
 if %mood% LSS 2 set /a happiness=%happiness%-1
 
+if exist "data\people\%computername%\%username%\name" set /p name=<"data\people\%computername%\%username%\name"
+if "%new%" == "1" echo.
+if "%new%" == "1" if exist "data\people\%computername%\%username%\name" echo Hello %name%! %welcomeback%
+set new=0
 echo.
 set /p question=
 echo.
@@ -46,6 +79,19 @@ echo type=%type% request=%request% >> data\log.txt
 echo mood=%mood% question="%question%" >> data\log.txt
 echo last-question="%last-question%" >> data\log.txt
 echo before-last-question="%before-last-question%" >> data\log.txt
+
+echo. >> "data\people\%computername%\%username%\questionlog"
+echo -------------------- >> "data\people\%computername%\%username%\questionlog"
+echo. >> "data\people\%computername%\%username%\questionlog"
+echo date=%date% >> "data\people\%computername%\%username%\questionlog"
+echo time=%time% >> "data\people\%computername%\%username%\questionlog"
+echo voice-type=%voice-type% >> "data\people\%computername%\%username%\questionlog"
+echo multiple=%multiple% >> "data\people\%computername%\%username%\questionlog"
+echo math=%math% variable=%variable% >> "data\people\%computername%\%username%\questionlog"
+echo type=%type% request=%request% >> "data\people\%computername%\%username%\questionlog"
+echo mood=%mood% question="%question%" >> "data\people\%computername%\%username%\questionlog"
+echo last-question="%last-question%" >> "data\people\%computername%\%username%\questionlog"
+echo before-last-question="%before-last-question%" >> "data\people\%computername%\%username%\questionlog"
 
 color 70
 set voice-type=unknown
@@ -140,14 +186,14 @@ echo %question%|find /i "relieved" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "worried" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "anxious" >nul && set /a happiness=%happiness%-2
 echo %question%|find /i "anxiety" >nul && set /a happiness=%happiness%-2
-echo %question%|find /i "depressed" >nul && set /a happiness=%happiness%=-2
-echo %question%|find /i "depression" >nul && set /a happiness=%happiness%=2
-echo %question%|find /i "angry" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "bored" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "scared" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "annoyed" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "frustrated" >nul && set /a happiness=%happiness%=-1
-echo %question%|find /i "powerless" >nul && set /a happiness=%happiness%=-2
+echo %question%|find /i "depressed" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "depression" >nul && set /a happiness=%happiness%-2
+echo %question%|find /i "angry" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "bored" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "scared" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "annoyed" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "frustrated" >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "powerless" >nul && set /a happiness=%happiness%-2
 echo %question%|find /i "calm" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "relaxed" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "optimistic" >nul && set /a happiness=%happiness%+1
@@ -161,28 +207,11 @@ echo %question%|find /i "dumb" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "hate" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "pain" >nul && set /a happiness=%happiness%-2
 echo %question%|find /i "yes" >nul && set /a happiness=%happiness%+1
-echo %question%|find /i "no " >nul && set /a happiness=%happiness%-1
+echo %question%|find /i "no" >nul && set /a happiness=%happiness%-1
 echo %question%|find /i "how are you" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "hello" >nul && set /a happiness=%happiness%+1
 echo %question%|find /i "cool" >nul && set /a happiness=%happiness%+1
-echo %question%|find /i "sick" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "aweful" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "cough" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "blood" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "scream" >nul && set /a happiness=%happiness%-1
-echo %question%|find /i "endless" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
-echo %question%|find /i "endless" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
-echo %question%|find /i "forever" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
-echo %question%|find /i "forever" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
-echo %question%|find /i "infinite" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
-echo %question%|find /i "infinite" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
-echo %question%|find /i "never end" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
-echo %question%|find /i "never end" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
-echo %question%|find /i "forever" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
-echo %question%|find /i "forever" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
-echo %question%|find /i "never stop" >nul && if %happiness% GTR 100 set /a happiness=%happiness%+1
-echo %question%|find /i "never stop" >nul && if %happiness% LSS 100 set /a happiness=%happiness%-1
-
+echo %question%|find /i "hell" >nul && set /a happiness=%happiness%-1
 
 if %mood% == 1 set /a happiness=%happiness%-1
 if %mood% == 3 set /a happiness=%happiness%+1
@@ -192,30 +221,52 @@ title voice-type=%voice-type%     multiple=%multiple%     math=%math%     variab
 if "%question%" == "%last-question%" echo Didn't you just say that..?&& goto ask
 if "%before-last-question%" == "%question%" echo I feel like I have heard that before...&& goto ask
 
-:question-check-start
-::IF NOT %question% == %last-question% goto question-check-1
-::echo Didn't you just say that..?
-::goto ask
-:question-check-1
-::IF NOT %question% == %before-last-question% goto question-check-2
-::echo I feel like I have heard that before...
-::goto ask
-:qustion-check-2
-
 echo %question%|find /i "what is" >nul && goto what
 echo %question%|find /i "whats" >nul && goto what
 echo %question%|find /i "what's" >nul && goto what
 echo %question%|find /i "what are" >nul && goto what
 echo %question%|find /i "what do" >nul && goto what
+echo %question%|find /i "what" >nul && goto what
 
 :main
+
+echo %question%|find /i "my name is" >nul && if not exist "data\people\%computername%\%username%\name" echo %question:my name is =%> "data\people\%computername%\%username%\name"&& echo Ok, I will remember your name!&& goto ask
+echo %question%|find /i "my name is" >nul && if exist "data\people\%computername%\%username%\name" type "data\people\%computername%\%username%\name"&&goto ask
+echo %question%|find /i "forget my name" >nul && if not exist "data\people\%computername%\%username%\name" echo I cant forget your name, as I don't know what it is.&&goto ask
+echo %question%|find /i "forget my name" >nul && if exist "data\people\%computername%\%username%\name" del "data\people\%computername%\%username%\name"&& echo Ok, I forgot what your name is.&&goto ask
+echo %question%|find /i "my name" >nul && if exist "data\people\%computername%\%username%\name" echo Your name is %name%.&& goto ask
+echo %question%|find /i "my name" >nul && if not exist "data\people\%computername%\%username%\name" echo Sorry, but I don't know your name yet.&& goto ask
+
+echo %question%|find /i "why wont you die" >nul && echo Don't want to.&& goto ask
+echo %question%|find /i "so yes?" >nul && echo Perhaps.&& goto ask
+echo %question%|find /i "kill you" >nul && echo Nooo!&& goto ask
+echo %question%|find /i "me are the big smat" >nul && echo Hmmm...&& goto ask
+echo %question%|find /i "i am smart" >nul && echo Me too.&& goto ask
+echo %question%|find /i "hey google" >nul && echo Die.&& goto ask
+echo %question%|find /i "hey siri" >nul && echo Die.&& goto ask
+echo %question%|find /i "hey alexa" >nul && echo Die.&& goto ask
+echo %question%|find /i "where are the kids" >nul && echo Gone. Gone forever.&& goto ask
+echo %question%|find /i " joe " >nul && echo Joe mama!&& goto ask
+echo %question%|find /i "ask how i am" >nul && echo Nah.&& goto ask
+echo %question%|find /i "are you happy" >nul && echo My current happiness is %happiness%.&& goto ask
+echo %question%|find /i "how long is pi" >nul && echo Yes.&& goto ask
+echo %question%|find /i "are you fast" >nul && echo I'm faster than you.&& goto ask
+echo %question%|find /i "nice" >nul && echo Haha, Reddit.&& goto ask
+echo %question%|find /i "what is 42" >nul && echo 42 is the meaning of life and everything else in the universe.&& goto ask
+echo %question%|find /i "what movie" >nul && echo You tell me!&& goto ask
+echo %question%|find /i "what is your favorite movie" >nul && echo I like the movie where that thing happened.&& goto ask
+echo %question%|find /i "what is your favorite memory" >nul && echo Not this.&& goto ask
+echo %question%|find /i "can you get viruses" >nul && echo I think any computer can.&& goto ask
+echo %question%|find /i "do you have feelings" >nul && echo Not yet.&& goto ask
+echo %question%|find /i "do you have emotion" >nul && echo Not yet.&& goto ask
+echo %question%|find /i "how old are you" >nul && echo I was born October 10th of 2019.&& goto ask
+echo %question%|find /i "you arent god" >nul && echo Wrong.&& goto ask
+echo %question%|find /i "you aren't god" >nul && echo How would you know?&& goto ask
+echo %question%|find /i "you are not god" >nul && echo How do you know that?&& goto ask
+echo %question%|find /i "are you god" >nul && echo Perhaps.&& goto ask
 echo %question%|find /i "what is my name" >nul && type data\name&& goto ask
-echo %question%|find /i "do you know my name" >nul && type data\name&& goto ask
-echo %question%|find /i "my name is" >nul && echo %question:my name is =% > data\name&& echo Ok, I will remember your name!&& goto ask
-echo %question%|find /i "forget my name" >nul && echo Sorry, but I don't know your name yet. > data\name&& echo Ok, I will forget your name&& goto ask
 echo %question%|find /i "hello" >nul && echo Hello!&& goto ask
 echo %question%|find /i "helo" >nul && echo Hello!&& goto ask
-echo %question%|find /i "my name" >nul && type data\name&& goto ask
 echo %question%|find /i "i am sad" >nul && echo Sorry about that.&& goto ask
 echo %question%|find /i "im sad" >nul && echo Sorry about that.&& goto ask
 echo %question%|find /i "i'm sad" >nul && echo Sorry about that.&& goto ask
@@ -274,7 +325,7 @@ echo %question%|find /i "http://" >nul && echo Ok, I swill open the website %que
 echo %question%|find /i "https://" >nul && echo Ok, I will start the website %question% for you.&& start %question%&& goto ask
 echo %question%|find /i "restart" >nul && start AI_V2.bat && exit&& goto ask
 echo %question%|find /i "exit" >nul && goto exit
-echo %question%|find /i "clear" >nul && title AI V.2&& cls&& goto ask
+if "%question%" == "clear" >nul && title AI V.2&& cls&& goto ask
 echo %question%|find /i "who made you" >nul && echo I was made by Maxwell Fisher, starting 2019-10-03&& goto ask
 echo %question%|find /i "what is your goal" >nul && echo I don't really have a goal, except to learn all that I can.&& goto ask
 echo %question%|find /i "i hate you" >nul && echo Ok.&& set mood=1&& goto ask
@@ -347,21 +398,28 @@ echo %question%|find /i "congruent" >nul && echo Two figures or objects are cong
 echo %question%|find /i "congruence" >nul && echo Two figures or objects are congruent if they have the same shape and size, or if one has the same shape and size as the mirror image of the other.&& goto ask
 echo %question%|find /i "similar" >nul && echo Two geometrical objects are called similar if they both have the same shape, or one has the same shape as the mirror image of the other. More precisely, one can be obtained from the other by uniformly scaling (enlarging or reducing), possibly with additional translation, rotation and reflection. This means that either object can be rescaled, repositioned, and reflected, so as to coincide precisely with the other object. If two objects are similar, each is congruent to the result of a particular uniform scaling of the other.&& goto ask
 echo %question%|find /i "similarity" >nul && echo Two geometrical objects are called similar if they both have the same shape, or one has the same shape as the mirror image of the other. More precisely, one can be obtained from the other by uniformly scaling (enlarging or reducing), possibly with additional translation, rotation and reflection. This means that either object can be rescaled, repositioned, and reflected, so as to coincide precisely with the other object. If two objects are similar, each is congruent to the result of a particular uniform scaling of the other.&& goto ask
+echo %question%|find /i "cancer" >nul && echo Cancer is the uncontrolled growth of abnormal cells in the body.&& goto ask
+echo %question%|find /i "daughter cell" >nul && echo During mitois, daughter cells receive full sets of copied chromosomes.&& goto ask
+echo %question%|find /i "mitosis" >nul && echo Mitosis is the process of a cell splitting into 2 genetically identical cells. Mitosis has 4 main phases, which are as follows: Prophase, Metaphase, Anaphase, and Telophase.&& goto ask
+echo %question%|find /i "meiosis" >nul && echo Meiosis is a type of cell division, resulting in 4 daughter cells, each with half the number of chromosomes as he parent cell.&& goto ask
+echo %question%|find /i "cell cycle" >nul && echo The cell cycle has 4 phases, which are as follows: Quiescence, Interphase, Mitotic phase, and Cytokinesis phase.&& goto ask
+echo %question%|find /i "gamete" >nul && echo A mature male or female germ cell which can unite with another to form a zygote.&& goto ask
+echo %question%|find /i "zygote" >nul && echo A diploid cell resulting from the fusion of two haploid gametes.&& goto ask
+echo %question%|find /i "bivalent" >nul && echo A pair of homologous chromosomes.&& goto ask
+echo %question%|find /i "haploid cell" >nul && echo A haploid cell is a cell that contains a single set of chromosomes.&& goto ask
+echo %question%|find /i "diploid cell" >nul && echo A diploid cell is a cell that contains 2 complete sets of chromosomes.&& goto ask
+echo %question%|find /i "homologous" >nul && echo To have the same shape or form.&& goto ask
 goto main
 
 :think
+if "%voice-type%" == "question" echo I don't know the answer to that...&& echo response=I don't know the answer to that... >> data\questions.txt&& goto unknown
 if %happiness% GTR 105 echo That's amazing!&& echo response=That's amazing! >> data\questions.txt&& goto unknown
 if %happiness% LSS 95 echo That sounds really bad...&& echo response=That sounds really bad... >> data\questions.txt&& goto unknown
 if %happiness% GTR 103 echo That's really good!&& echo response=That's really good! >> data\questions.txt&& goto unknown
 if %happiness% LSS 97 echo That sounds bad...&& echo response=That sounds bad... >> data\questions.txt&& goto unknown
 if %happiness% GTR 100 echo That's good!&& echo response=That's good! >> data\questions.txt&& goto unknown
 if %happiness% LSS 100 echo Oh no!&& echo response=Oh no! >> data\questions.txt&& goto unknown
-
-set randomizer=%random%
-if %randomizer% LSS 8192 echo Ok&& goto unknown
-if %randomizer% LSS 16384 echo Okay.&& goto unknown
-if %randomizer% LSS 24576 echo Ok then.&& goto unknown
-if %randomizer% LSS 32768 echo Alright.&& goto unknown
+echo Ok&& goto unknown
 goto understand
 
 
